@@ -1,0 +1,47 @@
+[
+  {
+    "id": "123456",
+    "parrotsOwned": [
+      {
+        "favoriteToys": ["dffdgdfg", " fgd"],
+        "_id": "123459",
+        "name": "Кеша"
+      }
+    ],
+    "name": "Оксана",
+    "location": "Москва",
+    "favBidQoute": "Видно птицу по полету",
+    "profilePic": "",
+    "__v": 0
+  },
+  {
+    "id": "123457",
+    "parrotsOwned": [
+      {
+        "favoriteToys": ["dffdgdfg", " fgd"],
+        "_id": "123460",
+        "name": "Кеша"
+      }
+    ],
+    "name": "Оксана",
+    "location": "Москва",
+    "favBidQoute": "Видно птицу по полету",
+    "profilePic": "",
+    "__v": 0
+  },
+  {
+    "id": "123458",
+    "parrotsOwned": [
+      {
+        "favoriteToys": ["dffdgdfg", " fgd"],
+        "_id": "123461",
+        "name": "Кеша"
+      }
+    ],
+    "name": "Оксана",
+    "location": "Москва",
+    "favBidQoute": "Видно птицу по полету",
+    "profilePic": "",
+    "__v": 0
+  }
+]
