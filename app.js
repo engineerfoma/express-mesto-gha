@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 
 app.use((req, res, next) => {
   req.user = {
-    _id: '63349d0706d6159126c75bf4'
+    _id: '63349d0706d6159126c75bf4',
   };
 
   next();
