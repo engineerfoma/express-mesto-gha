@@ -1,8 +1,12 @@
 const User = require('../models/User');
 
-const createUser = (req, res) => {
-  const user = new User(req.body).save();
+const createUser = async (req, res) => {
+  try {
+  const user = await new User(req.body).save();
   res.status(200).send(user);
+  } catch(e) {
+    return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
+  }
 };
 
 const getUsers = async (req, res) => {
@@ -19,7 +23,7 @@ const getUserById = async (req, res) => {
   try {
     const user = await User.findById(id);
     if (!user) {
-      return res.status(401).send({ message: 'Пошёл нахуй' });
+      return res.status(401).send({ message: 'Пользователь не найден' });
     }
     return res.status(200).send(user);
   } catch (e) {
@@ -31,7 +35,7 @@ const updateUserProfile = async (req) => {
   const { id } = req.user._id;
   // try {
   //   if(!user) {
-  //     return res.status(401).send({message: 'Пошёл нахуй'});
+  //     return res.status(401).send({message: 'Пользователь не найден'});
   //   }
   const user = await User.findById(id);
   return user;
@@ -45,7 +49,7 @@ const updateUserAvatar = async (req) => {
   const { id } = req.user._id;
   // try {
   //   if(!user) {
-  //     return res.status(401).send({message: 'Пошёл нахуй'});
+  //     return res.status(401).send({message: 'Пользователь не найден'});
   //   }
   const user = await User.findById(id);
   return user;
