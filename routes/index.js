@@ -7,7 +7,7 @@ const { cardRoutes } = require('./cards');
 routes.use('/users', userRoutes);
 routes.use('/cards', cardRoutes);
 routes.use((req, res) => {
-  res.status(404).send({ message: `Страница не найдена` });
+  res.status(404).send({ message: 'Страница не найдена' });
 });
 
 module.exports = {

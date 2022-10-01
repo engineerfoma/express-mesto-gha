@@ -3,10 +3,10 @@ const User = require('../models/User');
 const createUser = async (req, res) => {
   try {
     const user = await User.create(req.body);
-    res.status(200).send(user);
+    return res.status(200).send(user);
   } catch (e) {
-    if (e.errors.name.name === "ValidatorError") {
-      return res.status(400).send({ message: "Ошибка в запросе", ...e });
+    if (e.errors.name.name === 'ValidatorError') {
+      return res.status(400).send({ message: 'Ошибка в запросе', ...e });
     }
     return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
   }
@@ -15,7 +15,7 @@ const createUser = async (req, res) => {
 const getUsers = async (req, res) => {
   try {
     const users = await User.find({});
-    res.status(200).send(users);
+    return res.status(200).send(users);
   } catch (e) {
     return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
   }
@@ -48,7 +48,7 @@ const updateUserProfile = async (req, res) => {
     if (e.name === 'ValidationError') {
       return res.status(400).send({ message: 'Некоректные данные пользователя' });
     }
-    res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
   }
 };
 
@@ -69,7 +69,7 @@ const updateUserAvatar = async (req, res) => {
     if (e.name === 'ValidationError') {
       return res.status(400).send({ message: 'Некоректные данные пользователя' });
     }
-    res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
   }
 };
 
