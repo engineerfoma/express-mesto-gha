@@ -2,11 +2,12 @@ const User = require('../models/User');
 const { BadRequestError, NotFoundError, ServerError } = require('../errors/errors');
 
 const createUser = async (req, res) => {
+    const { name, about, avatar } = req.body;
   try {
-    const user = await User.create(req.body);
+    const {user} = await User.create({ name, about, avatar });
     return res.status(200).send(user);
   } catch (e) {
-    if (e.errors.name === 'ValidatorError' || e.errors.about === 'ValidatorError') {
+    if (e.name === 'ValidationError') {
       return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
     }
     return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
@@ -31,6 +32,9 @@ const getUserById = async (req, res) => {
     }
     return res.status(200).send(user);
   } catch (e) {
+    if (e.name === 'CastError') {
+      return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
+    }
     return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
   }
 };
@@ -51,7 +55,7 @@ const updateUserProfile = async (req, res) => {
     return res.status(200).send(user);
   } catch (e) {
     if (e.name === 'ValidationError') {
-      return res.status(BadRequestError).send({ message: 'Некоректные данные пользователя' });
+      return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
     }
     return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
   }
