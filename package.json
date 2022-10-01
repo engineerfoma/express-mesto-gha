@@ -6,6 +6,7 @@
   "scripts": {
     "lint": "npx eslint .",
     "prod": "node app.js",
+    "start": "node --inspect app.js",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
