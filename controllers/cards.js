@@ -15,6 +15,9 @@ const createCard = async (req, res) => {
     const card = await Card.create({ owner: req.user._id, ...req.body });
     return res.status(200).send(card);
   } catch (e) {
+    if (e.name === 'ValidationError') {
+      return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
+    }
     return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
   }
 };

@@ -2,9 +2,8 @@ const User = require('../models/User');
 const { BadRequestError, NotFoundError, ServerError } = require('../errors/errors');
 
 const createUser = async (req, res) => {
-    const { name, about, avatar } = req.body;
   try {
-    const {user} = await User.create({ name, about, avatar });
+    const user = await User.create(req.body);
     return res.status(200).send(user);
   } catch (e) {
     if (e.name === 'ValidationError') {
@@ -47,7 +46,7 @@ const updateUserProfile = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       id,
       { name, about },
-      { new: true },
+      { new: true, runValidators: true },
     );
     if (!user) {
       return res.status(NotFoundError).send({ message: 'Пользователь не найден' });
