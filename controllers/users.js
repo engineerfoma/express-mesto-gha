@@ -1,14 +1,15 @@
 const User = require('../models/User');
+const { BadRequestError, NotFoundError, ServerError } = require('../errors/errors');
 
 const createUser = async (req, res) => {
   try {
     const user = await User.create(req.body);
     return res.status(200).send(user);
   } catch (e) {
-    if (e.errors.name.name === 'ValidatorError') {
-      return res.status(400).send({ message: 'Ошибка в запросе', ...e });
+    if (e.errors.name === 'ValidatorError' || e.errors.about === 'ValidatorError') {
+      return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
     }
-    return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
   }
 };
 
@@ -17,7 +18,7 @@ const getUsers = async (req, res) => {
     const users = await User.find({});
     return res.status(200).send(users);
   } catch (e) {
-    return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
   }
 };
 
@@ -26,11 +27,11 @@ const getUserById = async (req, res) => {
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(401).send({ message: 'Пользователь не найден' });
+      return res.status(NotFoundError).send({ message: 'Пользователь не найден' });
     }
     return res.status(200).send(user);
   } catch (e) {
-    return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
   }
 };
 
@@ -39,16 +40,20 @@ const updateUserProfile = async (req, res) => {
   const { name, about } = req.body;
 
   try {
-    const user = await User.findByIdAndUpdate(id, { name, about });
+    const user = await User.findByIdAndUpdate(
+      id,
+      { name, about },
+      { new: true },
+    );
     if (!user) {
-      return res.status(401).send({ message: 'Пользователь не найден' });
+      return res.status(NotFoundError).send({ message: 'Пользователь не найден' });
     }
     return res.status(200).send(user);
   } catch (e) {
     if (e.name === 'ValidationError') {
-      return res.status(400).send({ message: 'Некоректные данные пользователя' });
+      return res.status(BadRequestError).send({ message: 'Некоректные данные пользователя' });
     }
-    return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
   }
 };
 
@@ -62,14 +67,14 @@ const updateUserAvatar = async (req, res) => {
       { new: true },
     );
     if (!user) {
-      return res.status(401).send({ message: 'Пользователь не найден' });
+      return res.status(NotFoundError).send({ message: 'Пользователь не найден' });
     }
     return res.status(200).send(user);
   } catch (e) {
     if (e.name === 'ValidationError') {
-      return res.status(400).send({ message: 'Некоректные данные пользователя' });
+      return res.status(BadRequestError).send({ message: 'Некоректные данные пользователя' });
     }
-    return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
   }
 };
 

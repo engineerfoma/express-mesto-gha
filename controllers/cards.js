@@ -1,11 +1,12 @@
 const Card = require('../models/Card');
+const { BadRequestError, NotFoundError, ServerError } = require('../errors/errors');
 
 const getCards = async (req, res) => {
   try {
     const cards = await Card.find({});
     return res.status(200).send(cards);
   } catch (e) {
-    return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
   }
 };
 
@@ -14,7 +15,7 @@ const createCard = async (req, res) => {
     const card = await Card.create({ owner: req.user._id, ...req.body });
     return res.status(200).send(card);
   } catch (e) {
-    return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
   }
 };
 
@@ -23,14 +24,14 @@ const deleteCardById = async (req, res) => {
   try {
     const card = await Card.findByIdAndDelete(cardId);
     if (!card) {
-      return res.status(401).send({ message: 'карточка не найдена' });
+      return res.status(NotFoundError).send({ message: 'карточка не найдена' });
     }
     return res.status(200).send(card);
   } catch (e) {
     if (e.name === 'CastError') {
-      return res.status(400).send({ message: 'Ошибка в запросе', ...e });
+      return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
     }
-    return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
   }
 };
 
@@ -42,14 +43,14 @@ const likeCard = async (req, res) => {
       { new: true },
     );
     if (!card) {
-      return res.status(401).send({ message: 'карточка не найдена' });
+      return res.status(NotFoundError).send({ message: 'карточка не найдена' });
     }
     return res.status(200).send(card);
   } catch (e) {
     if (e.name === 'CastError') {
-      return res.status(400).send({ message: 'Ошибка в запросе', ...e });
+      return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
     }
-    return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
   }
 };
 
@@ -61,14 +62,14 @@ const dislikeCard = async (req, res) => {
       { new: true },
     );
     if (!card) {
-      return res.status(401).send({ message: 'карточка не найдена' });
+      return res.status(NotFoundError).send({ message: 'карточка не найдена' });
     }
     return res.status(200).send(card);
   } catch (e) {
     if (e.name === 'CastError') {
-      return res.status(400).send({ message: 'Ошибка в запросе', ...e });
+      return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
     }
-    return res.status(500).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
   }
 };
 

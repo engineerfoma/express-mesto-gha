@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "npx eslint .",
     "prod": "node app.js",
-    "start": "node --inspect app.js",
+    "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/engineerfoma/express-mesto-gha.git"
   },
-  "author": "",
+  "author": "Fomenko Nick",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/engineerfoma/express-mesto-gha/issues"
