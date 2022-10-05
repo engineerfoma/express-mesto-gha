@@ -6,7 +6,7 @@ const getCards = async (req, res) => {
     const cards = await Card.find({});
     return res.status(200).send(cards);
   } catch (e) {
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -16,9 +16,9 @@ const createCard = async (req, res) => {
     return res.status(200).send(card);
   } catch (e) {
     if (e.name === 'ValidationError') {
-      return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
+      return res.status(BadRequestError).send({ message: 'Ошибка в запросе' });
     }
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -32,9 +32,9 @@ const deleteCardById = async (req, res) => {
     return res.status(200).send(card);
   } catch (e) {
     if (e.name === 'CastError') {
-      return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
+      return res.status(BadRequestError).send({ message: 'Ошибка в запросе' });
     }
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -42,7 +42,7 @@ const likeCard = async (req, res) => {
   try {
     const card = await Card.findByIdAndUpdate(
       req.params.cardId,
-      { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+      { $addToSet: { likes: req.user._id } },
       { new: true },
     );
     if (!card) {
@@ -51,9 +51,9 @@ const likeCard = async (req, res) => {
     return res.status(200).send(card);
   } catch (e) {
     if (e.name === 'CastError') {
-      return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
+      return res.status(BadRequestError).send({ message: 'Ошибка в запросе' });
     }
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -61,7 +61,7 @@ const dislikeCard = async (req, res) => {
   try {
     const card = await Card.findByIdAndUpdate(
       req.params.cardId,
-      { $pull: { likes: req.user._id } }, // убрать _id из массива
+      { $pull: { likes: req.user._id } },
       { new: true },
     );
     if (!card) {
@@ -70,9 +70,9 @@ const dislikeCard = async (req, res) => {
     return res.status(200).send(card);
   } catch (e) {
     if (e.name === 'CastError') {
-      return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
+      return res.status(BadRequestError).send({ message: 'Ошибка в запросе' });
     }
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 

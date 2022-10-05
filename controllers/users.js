@@ -7,9 +7,9 @@ const createUser = async (req, res) => {
     return res.status(200).send(user);
   } catch (e) {
     if (e.name === 'ValidationError') {
-      return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
+      return res.status(BadRequestError).send({ message: 'Ошибка в запросе' });
     }
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -18,7 +18,7 @@ const getUsers = async (req, res) => {
     const users = await User.find({});
     return res.status(200).send(users);
   } catch (e) {
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -32,9 +32,9 @@ const getUserById = async (req, res) => {
     return res.status(200).send(user);
   } catch (e) {
     if (e.name === 'CastError') {
-      return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
+      return res.status(BadRequestError).send({ message: 'Ошибка в запросе' });
     }
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -54,9 +54,9 @@ const updateUserProfile = async (req, res) => {
     return res.status(200).send(user);
   } catch (e) {
     if (e.name === 'ValidationError') {
-      return res.status(BadRequestError).send({ message: 'Ошибка в запросе', ...e });
+      return res.status(BadRequestError).send({ message: 'Ошибка в запросе' });
     }
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
@@ -67,7 +67,7 @@ const updateUserAvatar = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       id,
       { avatar },
-      { new: true },
+      { new: true, runValidators: true },
     );
     if (!user) {
       return res.status(NotFoundError).send({ message: 'Пользователь не найден' });
@@ -77,7 +77,7 @@ const updateUserAvatar = async (req, res) => {
     if (e.name === 'ValidationError') {
       return res.status(BadRequestError).send({ message: 'Некоректные данные пользователя' });
     }
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере', ...e });
+    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
   }
 };
 
