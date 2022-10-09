@@ -20,12 +20,13 @@ const createCard = async (req, res, next) => {
     if (e.name === 'ValidationError') {
       return next(new BadRequestError('Ошибка в запросе'));
     }
-    return next(new ServerError('Произошла ошибка на сервере'));
+    next();
   }
 };
 
 const deleteCardById = async (req, res, next) => {
   const { cardId } = req.params;
+  const currentUserId = req.user._id;
   try {
     const card = await Card.findByIdAndDelete(cardId);
     if (!card) {
@@ -36,7 +37,7 @@ const deleteCardById = async (req, res, next) => {
     if (e.name === 'CastError') {
       return next(new BadRequestError('Ошибка в запросе'));
     }
-    return next(new ServerError('Произошла ошибка на сервере'));
+    next();
   }
 };
 
@@ -55,7 +56,7 @@ const likeCard = async (req, res, next) => {
     if (e.name === 'CastError') {
       return next(new BadRequestError('Ошибка в запросе'));
     }
-    return next(new ServerError('Произошла ошибка на сервере'));
+    next();
   }
 };
 
@@ -74,7 +75,7 @@ const dislikeCard = async (req, res, next) => {
     if (e.name === 'CastError') {
       return next(new BadRequestError('Ошибка в запросе'));
     }
-    return next(new ServerError('Произошла ошибка на сервере'));
+    next();
   }
 };
 

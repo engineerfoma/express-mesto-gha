@@ -108,7 +108,7 @@ const updateUserAvatar = async (req, res, next) => {
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email });
     if (!user) {
       return next(new AuthorizationError('Неправильные почта или пароль'));
     }
