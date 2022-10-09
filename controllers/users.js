@@ -1,59 +1,68 @@
-const User = require('../models/User');
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {
-  BadRequestError,
-  NotFoundError,
-  ServerError,
-  AuthorizationError,
-  ConflictError,
-} = require('../errors/errors');
+const bcrypt = require('bcrypt');
+const User = require('../models/User');
+const { BadRequestError } = require('../errors/bad-request-err');
+const { NotFoundError } = require('../errors/not-found-err');
+const { AuthorizationError } = require('../errors/authorization-err');
+const { ConflictError } = require('../errors/conflict-err');
 
-const createUser = async (req, res) => {
-  const { name, about, avatar, email, password } = req.body;
+const createUser = async (req, res, next) => {
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body;
   try {
     const hashePassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({ name, about, avatar, email, password: hashePassword });
+    const user = await User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hashePassword,
+    });
     return res.status(200).send(user);
   } catch (e) {
     if (e.name === 'ValidationError') {
-      return res.status(BadRequestError).send({ message: 'Ошибка в запросе' });
+      return next(new BadRequestError('Ошибка в запросе'));
     }
 
     if (e.code === 11000) {
-      return res.status(ConflictError).send({ message: 'Такой email уже существует' });
+      return next(new ConflictError('Такой email уже существует'));
     }
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
+    return next();
   }
 };
 
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
     return res.status(200).send(users);
   } catch (e) {
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
+    return next();
   }
 };
 
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
   const { userId } = req.params;
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(NotFoundError).send({ message: 'Пользователь не найден' });
+      return next(new NotFoundError('Пользователь не найден'));
     }
     return res.status(200).send(user);
   } catch (e) {
     if (e.name === 'CastError') {
-      return res.status(BadRequestError).send({ message: 'Ошибка в запросе' });
+      return next(new BadRequestError('Ошибка в запросе'));
     }
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
+    return next();
   }
 };
 
-const updateUserProfile = async (req, res) => {
+const updateUserProfile = async (req, res, next) => {
   const id = req.user._id;
   const { name, about } = req.body;
 
@@ -64,18 +73,18 @@ const updateUserProfile = async (req, res) => {
       { new: true, runValidators: true },
     );
     if (!user) {
-      return res.status(NotFoundError).send({ message: 'Пользователь не найден' });
+      return next(new NotFoundError('Пользователь не найден'));
     }
     return res.status(200).send(user);
   } catch (e) {
     if (e.name === 'ValidationError') {
-      return res.status(BadRequestError).send({ message: 'Ошибка в запросе' });
+      return next(new BadRequestError('Ошибка в запросе'));
     }
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
+    return next();
   }
 };
 
-const updateUserAvatar = async (req, res) => {
+const updateUserAvatar = async (req, res, next) => {
   const id = req.user._id;
   const { avatar } = req.body;
   try {
@@ -85,14 +94,14 @@ const updateUserAvatar = async (req, res) => {
       { new: true, runValidators: true },
     );
     if (!user) {
-      return res.status(NotFoundError).send({ message: 'Пользователь не найден' });
+      return next(new NotFoundError('Пользователь не найден'));
     }
     return res.status(200).send(user);
   } catch (e) {
     if (e.name === 'ValidationError') {
-      return res.status(BadRequestError).send({ message: 'Некоректные данные пользователя' });
+      return next(new BadRequestError('Некоректные данные пользователя'));
     }
-    return res.status(ServerError).send({ message: 'Произошла ошибка на сервере' });
+    return next();
   }
 };
 
@@ -121,6 +130,17 @@ const login = async (req, res, next) => {
   }
 };
 
+const getMyInfo = async (req, res, next) => {
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+    return res.send(user);
+  } catch (e) {
+    return next();
+  }
+};
+
 module.exports = {
-  createUser, getUsers, getUserById, updateUserProfile, updateUserAvatar, login,
+  createUser, getUsers, getUserById, updateUserProfile, updateUserAvatar, login, getMyInfo,
 };
