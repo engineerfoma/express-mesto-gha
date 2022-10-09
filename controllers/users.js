@@ -24,7 +24,7 @@ const createUser = async (req, res, next) => {
       email,
       password: hashePassword,
     });
-    return res.status(200).send(user);
+    return res.status(200).send(user.toObject());
   } catch (e) {
     if (e.name === 'ValidationError') {
       return next(new BadRequestError('Ошибка в запросе'));
@@ -108,7 +108,7 @@ const updateUserAvatar = async (req, res, next) => {
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return next(new AuthorizationError('Неправильные почта или пароль'));
     }
@@ -118,7 +118,7 @@ const login = async (req, res, next) => {
       return next(new AuthorizationError('Неправильные почта или пароль'));
     }
 
-    const token = jwt.sign({ _id: user._id }, 'SECRET');
+    const token = jwt.sign({ _id: user._id }, 'qwerty');
     res.cookie('jwt', token, {
       maxAge: 3600000 * 24 * 7,
       httpOnly: true,
