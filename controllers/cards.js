@@ -33,7 +33,7 @@ const deleteCardById = async (req, res, next) => {
       return next(new NotFoundError('карточка не найдена'));
     }
     const card = await Card.findById(cardId);
-    const cardOwner = await Card.findByIdAndDelete(cardId);
+    const cardOwner = card.owner._id.toString();
     if (cardOwner !== currentUserId) {
       return next(new ForbiddenError('Не хватает прав на удаление чужой карточки!'));
     }
