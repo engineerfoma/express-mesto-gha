@@ -110,12 +110,12 @@ const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
-      return res.status(AuthorizationError).send({ message: 'Неправильные почта или пароль' });
+      return next(new AuthorizationError('Неправильные почта или пароль'));
     }
 
     const isUserValid = await bcrypt.compare(password, user.password);
     if (!isUserValid) {
-      return res.status(AuthorizationError).send({ message: 'Неправильные почта или пароль' });
+      return next(new AuthorizationError('Неправильные почта или пароль'));
     }
 
     const token = jwt.sign({ _id: user._id }, 'SECRET');
