@@ -33,7 +33,7 @@ const createUser = async (req, res, next) => {
     if (e.code === 11000) {
       return next(new ConflictError('Такой email уже существует'));
     }
-    return next();
+    return next(e);
   }
 };
 
@@ -42,7 +42,7 @@ const getUsers = async (req, res, next) => {
     const users = await User.find({});
     return res.status(200).send(users);
   } catch (e) {
-    return next();
+    return next(e);
   }
 };
 
@@ -58,7 +58,7 @@ const getUserById = async (req, res, next) => {
     if (e.name === 'CastError') {
       return next(new BadRequestError('Ошибка в запросе'));
     }
-    return next();
+    return next(e);
   }
 };
 
@@ -80,7 +80,7 @@ const updateUserProfile = async (req, res, next) => {
     if (e.name === 'ValidationError') {
       return next(new BadRequestError('Ошибка в запросе'));
     }
-    return next();
+    return next(e);
   }
 };
 
@@ -101,7 +101,7 @@ const updateUserAvatar = async (req, res, next) => {
     if (e.name === 'ValidationError') {
       return next(new BadRequestError('Некоректные данные пользователя'));
     }
-    return next();
+    return next(e);
   }
 };
 
@@ -124,9 +124,12 @@ const login = async (req, res, next) => {
       httpOnly: true,
       sameSite: true,
     });
-    return res.send(user);
+    return res.send(user); // если из объекта user с помощью деструктаризации достать name, about,
+    //  email, avatar, _id - email уже задекларирован. И вопрос: зачем не передать хешированный
+    //  пароль, если в модели user выставлено значение select: false и password не приходит в
+    // ответ
   } catch (e) {
-    return next();
+    return next(e);
   }
 };
 
@@ -137,7 +140,7 @@ const getMyInfo = async (req, res, next) => {
     const user = await User.findById(userId);
     return res.send(user);
   } catch (e) {
-    return next();
+    return next(e);
   }
 };
 

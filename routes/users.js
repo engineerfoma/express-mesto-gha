@@ -14,7 +14,7 @@ userRoutes.get(
   express.json(),
   celebrate({
     params: Joi.object().keys({
-      userId: Joi.string().alphanum().length(24),
+      userId: Joi.string().hex().alphanum().length(24),
     }),
   }),
   getUserById,

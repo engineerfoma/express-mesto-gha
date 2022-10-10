@@ -21,7 +21,7 @@ const createCard = async (req, res, next) => {
     if (e.name === 'ValidationError') {
       return next(new BadRequestError('Ошибка в запросе'));
     }
-    return next();
+    return next(e);
   }
 };
 
@@ -29,10 +29,10 @@ const deleteCardById = async (req, res, next) => {
   const { cardId } = req.params;
   const currentUserId = req.user._id;
   try {
-    if (!cardId) {
+    const card = await Card.findById(cardId);
+    if (!card) {
       return next(new NotFoundError('карточка не найдена'));
     }
-    const card = await Card.findById(cardId);
     const cardOwner = card.owner._id.toString();
     if (cardOwner !== currentUserId) {
       return next(new ForbiddenError('Не хватает прав на удаление чужой карточки!'));
@@ -44,7 +44,7 @@ const deleteCardById = async (req, res, next) => {
     if (e.name === 'CastError') {
       return next(new BadRequestError('Ошибка в запросе'));
     }
-    return next();
+    return next(e);
   }
 };
 
@@ -63,7 +63,7 @@ const likeCard = async (req, res, next) => {
     if (e.name === 'CastError') {
       return next(new BadRequestError('Ошибка в запросе'));
     }
-    return next();
+    return next(e);
   }
 };
 
@@ -82,7 +82,7 @@ const dislikeCard = async (req, res, next) => {
     if (e.name === 'CastError') {
       return next(new BadRequestError('Ошибка в запросе'));
     }
-    return next();
+    return next(e);
   }
 };
 

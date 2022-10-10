@@ -24,7 +24,7 @@ cardRoutes.delete(
   express.json(),
   celebrate({
     params: Joi.object().keys({
-      cardId: Joi.string().alphanum().length(24),
+      cardId: Joi.string().hex().alphanum().length(24),
     }),
   }),
   deleteCardById,
@@ -35,7 +35,7 @@ cardRoutes.put(
   express.json(),
   celebrate({
     params: Joi.object().keys({
-      cardId: Joi.string().alphanum().length(24),
+      cardId: Joi.string().hex().alphanum().length(24),
     }),
   }),
   likeCard,
@@ -46,7 +46,7 @@ cardRoutes.delete(
   express.json(),
   celebrate({
     params: Joi.object().keys({
-      cardId: Joi.string().alphanum().length(24),
+      cardId: Joi.string().hex().alphanum().length(24),
     }),
   }),
   dislikeCard,
