@@ -8,7 +8,6 @@ const {
 
 cardRoutes.post(
   '/',
-  express.json(),
   celebrate({
     body: Joi.object().keys({
       name: Joi.string().required().min(2).max(30),
@@ -18,10 +17,9 @@ cardRoutes.post(
   createCard,
 );
 
-cardRoutes.get('/', express.json(), getCards);
+cardRoutes.get('/', getCards);
 cardRoutes.delete(
   '/:cardId',
-  express.json(),
   celebrate({
     params: Joi.object().keys({
       cardId: Joi.string().hex().alphanum().length(24),
@@ -32,7 +30,6 @@ cardRoutes.delete(
 
 cardRoutes.put(
   '/:cardId/likes',
-  express.json(),
   celebrate({
     params: Joi.object().keys({
       cardId: Joi.string().hex().alphanum().length(24),
@@ -43,7 +40,6 @@ cardRoutes.put(
 
 cardRoutes.delete(
   '/:cardId/likes',
-  express.json(),
   celebrate({
     params: Joi.object().keys({
       cardId: Joi.string().hex().alphanum().length(24),

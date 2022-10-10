@@ -2,14 +2,13 @@ const Card = require('../models/Card');
 const { BadRequestError } = require('../errors/bad-request-err');
 const { NotFoundError } = require('../errors/not-found-err');
 const { ForbiddenError } = require('../errors/forbidden-err');
-const { ServerError } = require('../errors/server-err');
 
 const getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({});
     return res.status(200).send(cards);
   } catch (e) {
-    return next(new ServerError('Произошла ошибка на сервере'));
+    return next(e);
   }
 };
 

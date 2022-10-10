@@ -106,7 +106,13 @@ const updateUserAvatar = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  const { email, password } = req.body;
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body;
   try {
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
@@ -124,10 +130,12 @@ const login = async (req, res, next) => {
       httpOnly: true,
       sameSite: true,
     });
-    return res.send(user); // если из объекта user с помощью деструктаризации достать name, about,
-    //  email, avatar, _id - email уже задекларирован. И вопрос: зачем не передать хешированный
-    //  пароль, если в модели user выставлено значение select: false и password не приходит в
-    // ответ
+    return res.send({
+      name,
+      about,
+      avatar,
+      email,
+    });
   } catch (e) {
     return next(e);
   }
